@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LyricsFinder</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>LyricsFinder</h1>
+    <p class="P1">Just type the text in your head into the searchbar and click "Search"</p>
+    <p class="P1">It can take a few seconds to do research</p>
+    
+    <div class="search-box">
+        <form id="searchForm">
+            <input type="text" id="query" placeholder="Zeile aus dem Song eingeben..." required>
+            <button type="submit">Search</button>
+        </form>
+    </div>
+
+    <div class="results" id="results"></div>
+
+    <footer>
+        <div class="footer-left">
+            <p>&copy; 2026 Luca-Romeo Lotzkat. All rights reserved.</p>
+            <p>Data powered by <a href="https://developer.spotify.com" target="_blank" rel="noopener">Spotify API</a> &amp; <a href="https://genius.com" target="_blank" rel="noopener">Genius API</a>.</p>
+        </div>
+        
+        <div class="footer-right">
+            <a href="{{ url_for('datenschutz') }}">Privacy Policy</a>
+            <a href="{{ url_for('impressum') }}">Legal notice</a>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('searchForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const query = document.getElementById('query').value.trim();
+            const container = document.getElementById('results');
+
+            if (!query) return;
+
+            // Zeige Feedback während der Suche an
+            container.innerHTML = '<p style="color: #b3b3b3;">Suche läuft...</p>';
+
+            const formData = new FormData();
+            formData.append('query', query);
+
+            try {
+                const response = await fetch('/search', { 
+                    method: 'POST', 
+                    body: formData 
+                });
+
+                if (!response.ok) {
+                    throw new Error('Serverfehler');
+                }
+
+                const data = await response.json();
+                container.innerHTML = '';
+
+                if (!data.results || data.results.length === 0) {
+                    container.innerHTML = '<p style="color: #b3b3b3;">Keine Ergebnisse gefunden.</p>';
+                    return;
+                }
+
+                data.results.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.innerHTML = `
+                        <img src="${item.cover}" alt="${item.title}">
+                        <h3>${item.title}</h3>
+                        <p>${item.artist}</p>
+                        ${item.preview ? `<audio controls src="${item.preview}" style="width: 100%; margin: 10px 0;"></audio>` : ''}
+                        <a href="${item.url}" target="_blank" rel="noopener">Text auf Genius ansehen</a>
+                    `;
+                    container.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Fehler bei der Suche:', error);
+                container.innerHTML = '<p style="color: #ff5555;">Fehler bei der Suche. Bitte versuche es erneut.</p>';
+            }
+        });
+    </script>
+</body>
+</html>
