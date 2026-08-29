@@ -70,6 +70,7 @@ button {
     cursor: pointer;
     transition: background 0.2s, transform 0.1s;
     white-space: nowrap;
+    margin-top: 11px;
 }
 
 button:hover {
