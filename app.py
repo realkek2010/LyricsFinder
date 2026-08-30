@@ -27,7 +27,6 @@ def get_spotify_details(title, artist):
         return None, None, None
     
     headers = {'Authorization': f'Bearer {token}'}
-    # Bereinige den Titel von Klammern für eine bessere Spotify-Suche
     clean_title = title.split('(')[0].split('-')[0].strip()
     query = f"{clean_title} {artist}"
     url = f"https://api.spotify.com/v1/search?q={requests.utils.quote(query)}&type=track&limit=1"
@@ -85,21 +84,27 @@ def search():
         title = result_item['title']
         artist = result_item['primary_artist']['name']
         genius_cover = result_item.get('song_art_image_thumbnail_url')
-        genius_song_url = result_item['url']
         
+        # Sicherstellen, dass die Genius-URL immer mit https:// anfängt
+        raw_genius_url = result_item.get('url', '')
+        if raw_genius_url and not raw_genius_url.startswith('http'):
+            genius_song_url = f"https://genius.com{raw_genius_url}"
+        else:
+            genius_song_url = raw_genius_url
+
         # Versuche Spotify-Details zu holen
         spotify_cover, preview, spotify_url = get_spotify_details(title, artist)
         
-        # Fallback-Logik
         final_cover = spotify_cover if spotify_cover else genius_cover
-        final_url = spotify_url if spotify_url else genius_song_url
+        final_spotify_url = spotify_url if spotify_url else genius_song_url
 
         results.append({
             'title': title,
             'artist': artist,
             'cover': final_cover,
             'preview': preview,
-            'spotify_url': final_url
+            'spotify_url': final_spotify_url,
+            'genius_url': genius_song_url  # Expliziter Link direkt zu Genius
         })
 
     return jsonify({'results': results})
