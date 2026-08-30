@@ -68,11 +68,21 @@
                     const card = document.createElement('div');
                     card.className = 'card';
                     card.innerHTML = `
-                        <img src="${item.cover}" alt="${item.title}">
+                        <!-- Cover anklickbar machen: öffnet Spotify -->
+                        <a href="${item.spotify_url}" target="_blank" rel="noopener">
+                            <img src="${item.cover}" alt="${item.title}" style="cursor: pointer;">
+                        </a>
                         <h3>${item.title}</h3>
                         <p>${item.artist}</p>
                         ${item.preview ? `<audio controls src="${item.preview}" style="width: 100%; margin: 10px 0;"></audio>` : ''}
-                        <a href="${item.url}" target="_blank" rel="noopener">Text auf Genius ansehen</a>
+                        
+                        <a href="${item.spotify_url}" target="_blank" rel="noopener" style="color: #1db954; font-weight: bold; margin-bottom: 8px; display: inline-block;">
+                            Auf Spotify öffnen
+                        </a>
+                        <br>
+                        <a href="${item.url}" target="_blank" rel="noopener" style="color: #b3b3b3; font-size: 13px;">
+                            Text auf Genius ansehen
+                        </a>
                     `;
                     container.appendChild(card);
                 });
