@@ -13,7 +13,7 @@
     
     <div class="search-box">
         <form id="searchForm">
-            <input type="text" id="query" placeholder="Zeile aus dem Song eingeben..." required>
+            <input type="text" id="query" placeholder="Type your line" required>
             <button type="submit">Search</button>
         </form>
     </div>
@@ -42,7 +42,7 @@
             if (!query) return;
 
             // Zeige Feedback während der Suche an
-            container.innerHTML = '<p style="color: #b3b3b3;">Suche läuft...</p>';
+            container.innerHTML = '<p style="color: #b3b3b3;">Searching</p>';
 
             const formData = new FormData();
             formData.append('query', query);
@@ -78,16 +78,16 @@
                         ${item.preview ? `<audio controls src="${item.preview}" style="width: 100%; margin: 10px 0;"></audio>` : ''}
                         
                         <a href="${item.spotify_url}" target="_blank" rel="noopener" style="color: #1db954; font-weight: bold; margin-bottom: 8px; display: inline-block;">
-                            Auf Spotify öffnen
+                            Open with Spotify
                         </a>
                         <br>
-                        <a href="${item.genius_url}" target="_blank" rel="noopener" style="color: #b3b3b3; font-size: 13px;">Text auf Genius ansehen</a>
+                        <a href="${item.genius_url}" target="_blank" rel="noopener" style="color: #b3b3b3; font-size: 13px;">Show Lyrics on Genius</a>
                     `;
                     container.appendChild(card);
                 });
             } catch (error) {
                 console.error('Fehler bei der Suche:', error);
-                container.innerHTML = '<p style="color: #ff5555;">Fehler bei der Suche. Bitte versuche es erneut.</p>';
+                container.innerHTML = '<p style="color: #ff5555;">Error during search. Please try again.</p>';
             }
         });
     </script>
