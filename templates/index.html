@@ -42,8 +42,12 @@
 
             if (!query) return;
 
-            // Zeige Feedback während der Suche an
-            container.innerHTML = '<p style="color: #b3b3b3;">Searching</p>';
+            // Zeige Feedback mit 3-Punkte-Animation während der Suche an
+            container.innerHTML = `
+                <div class="loading-dots">
+                    Searching<span></span><span></span><span></span>
+                </div>
+            `;
 
             const formData = new FormData();
             formData.append('query', query);
