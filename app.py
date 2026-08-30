@@ -24,7 +24,7 @@ def get_spotify_token():
 def get_spotify_details(title, artist):
     token = get_spotify_token()
     if not token:
-        return None, None
+        return None, None, None
     
     headers = {'Authorization': f'Bearer {token}'}
     # Bereinige den Titel von Klammern für eine bessere Spotify-Suche
@@ -40,11 +40,12 @@ def get_spotify_details(title, artist):
             track = tracks[0]
             cover = track['album']['images'][0]['url'] if track['album']['images'] else None
             preview = track.get('preview_url')
-            return cover, preview
+            spotify_url = track['external_urls'].get('spotify')
+            return cover, preview, spotify_url
     except Exception as e:
         print(f"Spotify Search Error: {e}")
         
-    return None, None
+    return None, None, None
 
 @app.route('/')
 def index():
@@ -84,41 +85,21 @@ def search():
         title = result_item['title']
         artist = result_item['primary_artist']['name']
         genius_cover = result_item.get('song_art_image_thumbnail_url')
+        genius_song_url = result_item['url']
         
-        # Versuche Spotify-Cover zu holen
-        spotify_cover, preview = get_spotify_details(title, artist)
+        # Versuche Spotify-Details zu holen
+        spotify_cover, preview, spotify_url = get_spotify_details(title, artist)
+        
+        # Fallback-Logik
         final_cover = spotify_cover if spotify_cover else genius_cover
+        final_url = spotify_url if spotify_url else genius_song_url
 
         results.append({
             'title': title,
             'artist': artist,
             'cover': final_cover,
             'preview': preview,
-            'url': result_item['url']
-        })
-
-    return jsonify({'results': results})
-
-    results = []
-
-    for hit in hits[:5]:
-        result_item = hit['result']
-        title = result_item['title']
-        artist = result_item['primary_artist']['name']
-        genius_cover = result_item.get('song_art_image_thumbnail_url')
-        
-        # Versuche Spotify-Cover zu holen
-        spotify_cover, preview = get_spotify_details(title, artist)
-        
-        # Fallback auf Genius-Cover, falls Spotify kein Bild liefert
-        final_cover = spotify_cover if spotify_cover else genius_cover
-
-        results.append({
-            'title': title,
-            'artist': artist,
-            'cover': final_cover,
-            'preview': preview,
-            'url': result_item['url']
+            'spotify_url': final_url
         })
 
     return jsonify({'results': results})
