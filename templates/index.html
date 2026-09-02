@@ -7,8 +7,19 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <p>Discord soon</p>
-    <h1>LyricsFinder</h1>
+    <!-- Discord Button Oben Links -->
+    <a href="https://discord.gg/bhyqq4D9Ab" target="_blank" rel="noopener" class="discord-link" title="Discord (Soon)">
+        <svg class="discord-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 127.14 96.36">
+            <path fill="currentColor" d="M107.7 8.07A105.15 105.15 0 0 0 81.47 0a72.06 72.06 0 0 0-3.36 6.83 97.68 97.68 0 0 0-29.11 0A72.37 72.37 0 0 0 45.64 0a105.89 105.89 0 0 0-26.25 8.09C2.79 32.65-1.71 56.6.54 80.21a105.73 105.73 0 0 0 32.17 16.15 77.7 77.7 0 0 0 6.89-11.11 68.42 68.42 0 0 1-10.85-5.18c.91-.66 1.8-1.34 2.66-2a75.57 75.57 0 0 0 64.32 0c.87.68 1.76 1.36 2.66 2a68.68 68.68 0 0 1-10.87 5.19 77 77 0 0 0 6.89 11.1 105.25 105.25 0 0 0 32.19-16.14c2.64-27.38-4.51-51.11-18.91-72.15ZM42.45 65.69c-6.32 0-11.51-5.8-11.51-12.92s5.08-12.92 11.51-12.92c6.48 0 11.62 5.86 11.51 12.92 0 7.12-5.08 12.92-11.51 12.92Zm42.24 0c-6.32 0-11.51-5.8-11.51-12.92s5.08-12.92 11.51-12.92c6.48 0 11.62 5.86 11.51 12.92 0 7.12-5.03 12.92-11.51 12.92Z"/>
+        </svg>
+    </a>
+    
+    <!-- Header-Bereich mit Logo und Name -->
+    <div class="header-container" style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 10px;">
+        <img src="{{ url_for('static', filename='logo2.png') }}" alt="LyricsFinder Logo" style="height: 50px; width: auto;">
+        <h1 style="margin: 0;">LyricsFinder</h1>
+    </div>
+
     <p class="P1">Just type the text in your head into the searchbar and click "Search"</p>
     <p class="P1">It can take a few seconds to do research</p>
     
