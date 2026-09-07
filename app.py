@@ -1,12 +1,39 @@
 from flask import Flask, render_template, request, jsonify
 import requests
+import re
+from langdetect import detect, LangDetectException
 
 app = Flask(__name__)
 
-# Deine API-Keys hier eintragen:
+# API-Keys
 GENIUS_ACCESS_TOKEN = "GqdoiVXhVJ_F0PqUn3LDWgpfaaZhx_ssWFmcau2I90ACr3DF9xP2U8EXox-pCjIx"
 SPOTIFY_CLIENT_ID = "91c3e6a4cf0e46c394fa9412ef865947"
 SPOTIFY_CLIENT_SECRET = "b2faac29494741a589ea872ae345e49b"
+
+def is_original_track(title):
+    """
+    Prüft, ob der Song ein Original ist.
+    Filtert Remixes, Instrumentals, Live-Versionen, Covers etc. heraus.
+    """
+    forbidden_terms = [
+        r'\bremix\b', r'\binstrumental\b', r'\bcover\b', r'\blive\b',
+        r'\bedit\b', r'\bspeed up\b', r'\bslowed\b', r'\bkaraoke\b',
+        r'\btribute\b', r'\bacoustic\b', r'\bversion\b', r'\bmix\b'
+    ]
+    title_lower = title.lower()
+    for term in forbidden_terms:
+        if re.search(term, title_lower):
+            return False
+    return True
+
+def detect_language_text(text):
+    """Erkennt die Sprache eines Textes (z. B. de, en, fr, es, it, etc.)."""
+    try:
+        if len(text.strip()) < 3:
+            return "unknown"
+        return detect(text)
+    except LangDetectException:
+        return "unknown"
 
 def get_spotify_token():
     auth_url = 'https://accounts.spotify.com/api/token'
@@ -53,7 +80,8 @@ def index():
 @app.route('/search', methods=['POST'])
 def search():
     lyrics_snippet = request.form.get('query')
-    print(f"\n--- Neue Suche gestartet für: '{lyrics_snippet}' ---")
+    selected_language = request.form.get('language', 'all')
+    print(f"\n--- Neue Suche gestartet für: '{lyrics_snippet}' (Sprachfilter: {selected_language}) ---")
     
     if not lyrics_snippet:
         return jsonify({'results': []})
@@ -63,7 +91,6 @@ def search():
     
     try:
         res = requests.get(genius_url, headers=headers, params={'q': lyrics_snippet}, timeout=5)
-        print(f"Genius Status-Code: {res.status_code}")
         
         if res.status_code != 200:
             print(f"Genius Fehler-Antwort: {res.text}")
@@ -71,7 +98,6 @@ def search():
             
         data = res.json()
         hits = data.get('response', {}).get('hits', [])
-        print(f"Genius Treffer Anzahl: {len(hits)}")
         
     except Exception as e:
         print(f"Genius API Exception: {e}")
@@ -79,20 +105,33 @@ def search():
 
     results = []
 
-    for hit in hits[:5]:
+    for hit in hits:
         result_item = hit['result']
         title = result_item['title']
         artist = result_item['primary_artist']['name']
+
+        # Filter: Nur Original-Tracks verarbeiten (keine Remixes, Instrumentals etc.)
+        if not is_original_track(title):
+            continue
+
         genius_cover = result_item.get('song_art_image_thumbnail_url')
         
-        # Sicherstellen, dass die Genius-URL immer mit https:// anfängt
         raw_genius_url = result_item.get('url', '')
         if raw_genius_url and not raw_genius_url.startswith('http'):
             genius_song_url = f"https://genius.com{raw_genius_url}"
         else:
             genius_song_url = raw_genius_url
 
-        # Versuche Spotify-Details zu holen
+        # Spracherkennung durchführen
+        detected_lang = detect_language_text(f"{lyrics_snippet} {title}")
+
+        # Prüfen, ob eine Sprachabweichung vorliegt
+        language_mismatch = False
+        if selected_language != 'all':
+            if detected_lang != selected_language:
+                language_mismatch = True
+
+        # Spotify-Details abfragen
         spotify_cover, preview, spotify_url = get_spotify_details(title, artist)
         
         final_cover = spotify_cover if spotify_cover else genius_cover
@@ -104,8 +143,13 @@ def search():
             'cover': final_cover,
             'preview': preview,
             'spotify_url': final_spotify_url,
-            'genius_url': genius_song_url  # Expliziter Link direkt zu Genius
+            'genius_url': genius_song_url,
+            'detected_language': detected_lang,
+            'language_mismatch': language_mismatch
         })
+
+        if len(results) >= 5:
+            break
 
     return jsonify({'results': results})
 
