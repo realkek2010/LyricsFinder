@@ -111,8 +111,8 @@ h1 {
     padding: 14px 20px;
     border-radius: 25px;
     border: none;
-    background-color: #1db954;
-    color: #fff;
+    background-color: #1db954 !important;
+    color: #ffffff !important; /* Verhindert ausgegrauten Text */
     font-weight: bold;
     font-size: 16px;
     cursor: pointer;
@@ -126,7 +126,8 @@ h1 {
 
 /* Hover-Effekt für den Filter-Button */
 .Filter-Sprache select:hover {
-    background-color: #1ed760;
+    background-color: #1ed760 !important;
+    color: #ffffff !important;
     transform: translateY(-2px);
     box-shadow: 0 0 15px rgba(29, 185, 84, 0.8), 0 0 25px rgba(29, 185, 84, 0.4);
 }
@@ -134,7 +135,7 @@ h1 {
 /* Styling für die Optionen innerhalb des Dropdowns */
 .Filter-Sprache select option {
     background-color: #242424;
-    color: #ffffff;
+    color: #ffffff !important;
     font-size: 15px;
     padding: 10px;
     font-weight: normal;
@@ -314,10 +315,11 @@ footer a:hover {
     }
 }
 
-/* --- Mobile Responsive Rules --- */
-@media (max-width: 600px) {
+/* --- Nur Mobile Responsive Rules (Handy & Tablet) --- */
+@media (max-width: 768px) {
     body {
         padding: 15px 10px;
+        background-color: #535151 !important; /* Behält exakt die Desktop-Farbe bei */
     }
 
     .discord-link {
@@ -332,7 +334,19 @@ footer a:hover {
         gap: 10px;
     }
 
-    .Filter-Sprache select,
+    /* Stellt sicher, dass das Dropdown auf dem Handy grün und gut lesbar bleibt */
+    .Filter-Sprache {
+        width: 100%;
+    }
+
+    .Filter-Sprache select {
+        width: 100%;
+        max-width: 100%;
+        background-color: #1db954 !important;
+        color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important; /* Erzwingt weiße Schrift unter iOS/Safari */
+    }
+
     input[type="text"],
     button {
         width: 100%;
