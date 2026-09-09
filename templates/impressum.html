@@ -3,16 +3,54 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Legal Notice</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='legal.css') }}">
+  <title>Legal Notice / Impressum</title>
+  <link rel="stylesheet" href="/static/legal.css">
+  <style>
+    /* Styling für den Toggle-Button oben rechts */
+    .lang-switch {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+    }
+
+    #langToogleBtn {
+        background-color: #242424;
+        color: #1db954;
+        border: 1px solid #1db954;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    #langToogleBtn:hover {
+        background-color: #1db954;
+        color: #ffffff;
+    }
+
+    @media (max-width: 768px) {
+        .lang-switch {
+            top: 15px;
+            right: 15px;
+        }
+    }
+  </style>
 </head>
 <body>
 
+  <!-- Sprachumschaltung oben rechts -->
+  <div class="lang-switch">
+      <button id="langToogleBtn" onclick="toggleLanguage()">EN / DE</button>
+  </div>
+
   <main class="legal-container">
-    <h1>Legal Notice</h1>
+    <h1 id="title">Legal Notice</h1>
 
     <section>
-      <h2>Information pursuant to § 5 TMG</h2>
+      <h2 id="sec1-title">Information pursuant to § 5 TMG</h2>
       <p>
         <strong>Luca-Romeo Lotzkat</strong><br>
         Berlin, Germany
@@ -20,28 +58,84 @@
     </section>
 
     <section>
-      <h2>Contact</h2>
+      <h2 id="sec2-title">Contact</h2>
       <p>
         Email: lotzkatluca1@gmail.com<br>
-        Phone: +49 1512 1205385
+        <span id="phone-text">Phone: +49 1512 1205385</span>
       </p>
     </section>
 
     <section>
-      <h2>Liability for Contents</h2>
-      <p>As a service provider, we are responsible for our own content on these pages in accordance with general laws pursuant to § 7 Abs.1 TMG. According to §§ 8 to 10 TMG, however, we as a service provider are not obligated to monitor transmitted or stored third-party information or to investigate circumstances that indicate illegal activity.</p>
+      <h2 id="sec3-title">Liability for Contents</h2>
+      <p id="sec3-text">As a service provider, we are responsible for our own content on these pages in accordance with general laws pursuant to § 7 Abs.1 TMG. According to §§ 8 to 10 TMG, however, we as a service provider are not obligated to monitor transmitted or stored third-party information or to investigate circumstances that indicate illegal activity.</p>
     </section>
 
     <section>
-      <h2>Copyright & API Disclaimers</h2>
-      <p>The content and works created by the site operators on these pages are subject to German copyright law.</p>
-      <p>This website uses interfaces from <strong>Spotify</strong> and <strong>Genius</strong> to display song and lyrics information. All metadata, cover artwork, and lyrics remain the property of their respective copyright holders.</p>
+      <h2 id="sec4-title">Copyright & API Disclaimers</h2>
+      <p id="sec4-text1">The content and works created by the site operators on these pages are subject to German copyright law.</p>
+      <p id="sec4-text2">This website uses interfaces from <strong>Spotify</strong> and <strong>Genius</strong> to display song and lyrics information. All metadata, cover artwork, and lyrics remain the property of their respective copyright holders.</p>
     </section>
 
     <div class="back-link">
-      <a href="/">&larr; Back to Main Page</a>
+      <a href="/" id="back-link">&larr; Back to Main Page</a>
     </div>
   </main>
+
+  <script>
+    const translations = {
+      en: {
+        title: "Legal Notice",
+        sec1Title: "Information pursuant to § 5 TMG",
+        sec2Title: "Contact",
+        phoneText: "Phone: +49 1512 1205385",
+        sec3Title: "Liability for Contents",
+        sec3Text: "As a service provider, we are responsible for our own content on these pages in accordance with general laws pursuant to § 7 Abs.1 TMG. According to §§ 8 to 10 TMG, however, we as a service provider are not obligated to monitor transmitted or stored third-party information or to investigate circumstances that indicate illegal activity.",
+        sec4Title: "Copyright & API Disclaimers",
+        sec4Text1: "The content and works created by the site operators on these pages are subject to German copyright law.",
+        sec4Text2: "This website uses interfaces from Spotify and Genius to display song and lyrics information. All metadata, cover artwork, and lyrics remain the property of their respective copyright holders.",
+        backLink: "← Back to Main Page",
+        btnText: "EN / DE"
+      },
+      de: {
+        title: "Impressum",
+        sec1Title: "Angaben gemäß § 5 TMG",
+        sec2Title: "Kontakt",
+        phoneText: "Telefon: +49 1512 1205385",
+        sec3Title: "Haftung für Inhalte",
+        sec3Text: "Als Diensteanbieter sind wir gemäß § 7 Abs.1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen.",
+        sec4Title: "Urheberrecht & API-Hinweise",
+        sec4Text1: "Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht.",
+        sec4Text2: "Diese Website nutzt Schnittstellen von Spotify und Genius zur Anzeige von Song- und Songtext-Informationen. Alle Metadaten, Cover-Artworks und Songtexte bleiben Eigentum der jeweiligen Rechteinhaber.",
+        backLink: "← Zurück zur Hauptseite",
+        btnText: "DE / EN"
+      }
+    };
+
+    let currentLang = 'en';
+
+    function toggleLanguage() {
+      currentLang = currentLang === 'en' ? 'de' : 'en';
+      const t = translations[currentLang];
+
+      document.documentElement.lang = currentLang;
+      document.getElementById('title').textContent = t.title;
+      document.getElementById('sec1-title').textContent = t.sec1Title;
+      document.getElementById('sec2-title').textContent = t.sec2Title;
+      document.getElementById('phone-text').textContent = t.phoneText;
+      document.getElementById('sec3-title').textContent = t.sec3Title;
+      document.getElementById('sec3-text').textContent = t.sec3Text;
+      document.getElementById('sec4-title').textContent = t.sec4Title;
+      document.getElementById('sec4-text1').textContent = t.sec4Text1;
+      
+      // Text mit Fettdruck für Spotify und Genius
+      document.getElementById('sec4-text2').innerHTML = currentLang === 'de' 
+        ? 'Diese Website nutzt Schnittstellen von <strong>Spotify</strong> und <strong>Genius</strong> zur Anzeige von Song- und Songtext-Informationen. Alle Metadaten, Cover-Artworks und Songtexte bleiben Eigentum der jeweiligen Rechteinhaber.'
+        : 'This website uses interfaces from <strong>Spotify</strong> and <strong>Genius</strong> to display song and lyrics information. All metadata, cover artwork, and lyrics remain the property of their respective copyright holders.';
+      
+      document.getElementById('back-link').textContent = t.backLink;
+      document.getElementById('langToogleBtn').textContent = t.btnText;
+    }
+  </script>
 
 </body>
 </html>
