@@ -8,6 +8,12 @@
 </head>
 <body>
 
+    <!-- Sprachumschaltung-->
+    <div class="lang-switch">
+        <button id="langToogleBtn" onclick="toogleLanguage()">DE / EN</button>
+    </div>
+
+
     <!-- Discord Button Oben Links -->
     <a href="https://discord.gg/bhyqq4D9Ab" target="_blank" rel="noopener" class="discord-link" title="Discord (Soon)">
         <svg class="discord-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 127.14 96.36" aria-hidden="true">
@@ -15,7 +21,8 @@
         </svg>
     </a>
 
-    <main class="main-content">
+    
+      <main class="main-content">
         <!-- Header-Bereich mit Logo und Name -->
         <header class="header-container">
             <img src="/static/logo2.png" alt="LyricsFinder Logo">
@@ -141,6 +148,190 @@
             } catch (error) {
                 console.error('Fehler bei der Suche:', error);
                 container.innerHTML = '<p style="color: #ff5555;">Error during search. Please try again.</p>';
+            }
+        });
+    </script>
+
+    <script>
+        // Übersetzungswörterbuch für DE / EN
+        const translations = {
+            de: {
+                p1: "Gib einfach den Text aus deinem Kopf in die Suchleiste ein und klicke auf \"Suchen\"",
+                p2: "Die Recherche kann einige Sekunden dauern",
+                placeholder: "Textzeile eingeben",
+                searchBtn: "Suchen",
+                searching: "Suche läuft",
+                noResults: "Keine Ergebnisse gefunden.",
+                mismatchError: "Die Suche konnte nicht durchgeführt werden, da die Sprachen nicht übereinstimmen. Bitte stelle den Sprachfilter auf Alle Sprachen.",
+                openSpotify: "Auf Spotify öffnen",
+                showGenius: "Songtext auf Genius anzeigen",
+                serverError: "Fehler bei der Suche. Bitte versuche es erneut.",
+                btnText: "DE / EN",
+                privacyPolicy: "Datenschutzerklärung",
+                legalNotice: "Impressum",
+                optAll: "Alle Sprachen",
+                optEn: "Englisch",
+                optDe: "Deutsch",
+                optFr: "Französisch",
+                optEs: "Spanisch",
+                optIt: "Italienisch",
+                optPt: "Portugiesisch",
+                optNl: "Niederländisch",
+                optTr: "Türkisch",
+                optRu: "Russisch"
+            },
+            en: {
+                p1: "Just type the text in your head into the searchbar and click \"Search\"",
+                p2: "It can take a few seconds to do research",
+                placeholder: "Type your line",
+                searchBtn: "Search",
+                searching: "Searching",
+                noResults: "No results found.",
+                mismatchError: "Search could not be completed because the languages do not match. Please set the language filter to All Languages.",
+                openSpotify: "Open with Spotify",
+                showGenius: "Show Lyrics on Genius",
+                serverError: "Error during search. Please try again.",
+                btnText: "EN / DE",
+                privacyPolicy: "Privacy Policy",
+                legalNotice: "Legal notice",
+                optAll: "All Languages",
+                optEn: "English",
+                optDe: "German",
+                optFr: "French",
+                optEs: "Spanish",
+                optIt: "Italian",
+                optPt: "Portuguese",
+                optNl: "Dutch",
+                optTr: "Turkish",
+                optRu: "Russian"
+            }
+        };
+
+        // Standardmäßig auf DE
+        let currentLang = 'de';
+
+        function toogleLanguage() {
+            currentLang = currentLang === 'de' ? 'en' : 'de';
+            const t = translations[currentLang];
+
+            // HTML-Lang-Attribut aktualisieren
+            document.documentElement.lang = currentLang;
+
+            // Untertitel aktualisieren
+            const pElements = document.querySelectorAll('.P1');
+            if (pElements.length >= 2) {
+                pElements[0].textContent = t.p1;
+                pElements[1].textContent = t.p2;
+            }
+
+            // Input Placeholder & Search Button
+            document.getElementById('query').placeholder = t.placeholder;
+            document.querySelector('#searchForm button').textContent = t.searchBtn;
+
+            // Toggle Button Text
+            document.getElementById('langToogleBtn').textContent = t.btnText;
+
+            // Footer Links übersetzen
+            const footerLinks = document.querySelectorAll('.footer-right a');
+            if (footerLinks.length >= 2) {
+                footerLinks[0].textContent = t.privacyPolicy;
+                footerLinks[1].textContent = t.legalNotice;
+            }
+
+            // Dropdown-Optionen übersetzen
+            const select = document.getElementById('language');
+            if (select) {
+                select.querySelector('option[value="all"]').textContent = t.optAll;
+                select.querySelector('option[value="en"]').textContent = t.optEn;
+                select.querySelector('option[value="de"]').textContent = t.optDe;
+                select.querySelector('option[value="fr"]').textContent = t.optFr;
+                select.querySelector('option[value="es"]').textContent = t.optEs;
+                select.querySelector('option[value="it"]').textContent = t.optIt;
+                select.querySelector('option[value="pt"]').textContent = t.optPt;
+                select.querySelector('option[value="nl"]').textContent = t.optNl;
+                select.querySelector('option[value="tr"]').textContent = t.optTr;
+                select.querySelector('option[value="ru"]').textContent = t.optRu;
+            }
+
+            // Falls aktuell eine Mismatch-Meldung angezeigt wird, diese ebenfalls übersetzen
+            const mismatchBox = document.getElementById('mismatchAlert');
+            if (mismatchBox) {
+                mismatchBox.textContent = t.mismatchError;
+            }
+        }
+
+        // Suchformular Logik
+        document.getElementById('searchForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const query = document.getElementById('query').value.trim();
+            const language = document.getElementById('language').value;
+            const container = document.getElementById('results');
+            const t = translations[currentLang];
+
+            if (!query) return;
+
+            container.innerHTML = `
+                <div class="loading-dots">
+                    ${t.searching}<span></span><span></span><span></span>
+                </div>
+            `;
+
+            const formData = new FormData();
+            formData.append('query', query);
+            formData.append('language', language);
+
+            try {
+                const response = await fetch('/search', { 
+                    method: 'POST', 
+                    body: formData 
+                });
+
+                if (!response.ok) {
+                    throw new Error('Serverfehler');
+                }
+
+                const data = await response.json();
+                container.innerHTML = '';
+
+                if (!data.results || data.results.length === 0) {
+                    container.innerHTML = `<p style="color: #b3b3b3;">${t.noResults}</p>`;
+                    return;
+                }
+
+                // Prüfen auf Sprach-Mismatch
+                const hasMismatch = data.results.some(item => item.language_mismatch);
+
+                if (hasMismatch) {
+                    container.innerHTML = `
+                        <p id="mismatchAlert" style="color: #ffcc00; font-weight: bold; background: rgba(255, 204, 0, 0.1); padding: 15px; border-radius: 8px; border: 1px solid #ffcc00;">
+                            ${t.mismatchError}
+                        </p>
+                    `;
+                    return;
+                }
+
+                data.results.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.innerHTML = `
+                        <a href="${item.spotify_url}" target="_blank" rel="noopener">
+                            <img src="${item.cover}" alt="${item.title}">
+                        </a>
+                        <h3>${item.title}</h3>
+                        <p>${item.artist}</p>
+                        ${item.preview ? `<audio controls src="${item.preview}" style="width: 100%; margin: 10px 0;"></audio>` : ''}
+                        
+                        <a href="${item.spotify_url}" target="_blank" rel="noopener" style="color: #1db954; font-weight: bold; margin-bottom: 8px; display: inline-block;">
+                            ${t.openSpotify}
+                        </a>
+                        <br>
+                        <a href="${item.genius_url}" target="_blank" rel="noopener" style="color: #b3b3b3; font-size: 13px;">${t.showGenius}</a>
+                    `;
+                    container.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Fehler bei der Suche:', error);
+                container.innerHTML = `<p style="color: #ff5555;">${t.serverError}</p>`;
             }
         });
     </script>
