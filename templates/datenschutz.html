@@ -3,53 +3,164 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Privacy Policy</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='legal.css') }}">
+  <title>Privacy Policy / Datenschutz</title>
+  <link rel="stylesheet" href="/static/legal.css">
+  <style>
+    /* Styling für den Toggle-Button oben rechts */
+    .lang-switch {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+    }
+
+    #langToogleBtn {
+        background-color: #242424;
+        color: #1db954;
+        border: 1px solid #1db954;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    #langToogleBtn:hover {
+        background-color: #1db954;
+        color: #ffffff;
+    }
+
+    @media (max-width: 768px) {
+        .lang-switch {
+            top: 15px;
+            right: 15px;
+        }
+    }
+  </style>
 </head>
 <body class="legal-page">
 
+  <!-- Sprachumschaltung oben rechts -->
+  <div class="lang-switch">
+      <button id="langToogleBtn" onclick="toggleLanguage()">EN / DE</button>
+  </div>
+
   <main class="legal-container">
-    <h1>Privacy Policy</h1>
+    <h1 id="title">Privacy Policy</h1>
 
     <section>
-      <h2>1. Data Protection at a Glance</h2>
-      <p>The protection of your personal data is important to us. This privacy policy informs you about what data is processed when visiting this website.</p>
+      <h2 id="sec1-title">1. Data Protection at a Glance</h2>
+      <p id="sec1-text">The protection of your personal data is important to us. This privacy policy informs you about what data is processed when visiting this website.</p>
     </section>
 
     <section>
-      <h2>2. Controller / Responsible Party</h2>
-      <p>The party responsible for data processing on this website is:</p>
+      <h2 id="sec2-title">2. Controller / Responsible Party</h2>
+      <p id="sec2-text">The party responsible for data processing on this website is:</p>
       <p>
         <strong>Luca-Romeo Lotzkat</strong><br>
-        </p>
+      </p>
     </section>
 
     <section>
-      <h2>3. Data Collection and API Usage</h2>
+      <h2 id="sec3-title">3. Data Collection and API Usage</h2>
       
       <h3>Spotify Web API</h3>
-      <p>This application uses interfaces of the Spotify Web API to provide music and track information. When using corresponding features, technical requests may be transmitted to Spotify servers. No personal data is shared with Spotify unless you explicitly log in with your Spotify account.</p>
-      <p>For more information, please refer to the <a href="https://www.spotify.com/de/legal/privacy-policy/" target="_blank" rel="noopener">Spotify Privacy Policy</a>.</p>
+      <p id="spotify-text">This application uses interfaces of the Spotify Web API to provide music and track information. When using corresponding features, technical requests may be transmitted to Spotify servers. No personal data is shared with Spotify unless you explicitly log in with your Spotify account.</p>
+      <p><span id="spotify-link-text">For more information, please refer to the</span> <a href="https://www.spotify.com/de/legal/privacy-policy/" target="_blank" rel="noopener" id="spotify-link">Spotify Privacy Policy</a>.</p>
 
       <h3>Genius API</h3>
-      <p>This application uses data from the Genius API to display song lyrics. When retrieving lyrics, search queries are forwarded to Genius servers.</p>
-      <p>For more information, please refer to the <a href="https://genius.com/static/privacy" target="_blank" rel="noopener">Genius Privacy Terms</a>.</p>
+      <p id="genius-text">This application uses data from the Genius API to display song lyrics. When retrieving lyrics, search queries are forwarded to Genius servers.</p>
+      <p><span id="genius-link-text">For more information, please refer to the</span> <a href="https://genius.com/static/privacy" target="_blank" rel="noopener" id="genius-link">Genius Privacy Terms</a>.</p>
     </section>
 
     <section>
-      <h2>4. Server Log Files</h2>
-      <p>The website provider automatically collects and stores information in so-called server log files, which your browser automatically transmits to us (e.g., IP address, browser type, time of the request). This data serves exclusively to ensure technical security and functionality of the website.</p>
+      <h2 id="sec4-title">4. Server Log Files</h2>
+      <p id="sec4-text">The website provider automatically collects and stores information in so-called server log files, which your browser automatically transmits to us (e.g., IP address, browser type, time of the request). This data serves exclusively to ensure technical security and functionality of the website.</p>
     </section>
 
     <section>
-      <h2>5. Your Rights</h2>
-      <p>You have the right at any time to obtain free information about your stored personal data, its origin and recipients, and the purpose of the data processing, as well as a right to rectification or deletion of this data.</p>
+      <h2 id="sec5-title">5. Your Rights</h2>
+      <p id="sec5-text">You have the right at any time to obtain free information about your stored personal data, its origin and recipients, and the purpose of the data processing, as well as a right to rectification or deletion of this data.</p>
     </section>
 
     <div class="back-link">
-      <a href="/">&larr; Back to Main Page</a>
+      <a href="/" id="back-link">&larr; Back to Main Page</a>
     </div>
   </main>
+
+  <script>
+    const translations = {
+      en: {
+        title: "Privacy Policy",
+        sec1Title: "1. Data Protection at a Glance",
+        sec1Text: "The protection of your personal data is important to us. This privacy policy informs you about what data is processed when visiting this website.",
+        sec2Title: "2. Controller / Responsible Party",
+        sec2Text: "The party responsible for data processing on this website is:",
+        sec3Title: "3. Data Collection and API Usage",
+        spotifyText: "This application uses interfaces of the Spotify Web API to provide music and track information. When using corresponding features, technical requests may be transmitted to Spotify servers. No personal data is shared with Spotify unless you explicitly log in with your Spotify account.",
+        spotifyLinkText: "For more information, please refer to the",
+        spotifyLink: "Spotify Privacy Policy",
+        geniusText: "This application uses data from the Genius API to display song lyrics. When retrieving lyrics, search queries are forwarded to Genius servers.",
+        geniusLinkText: "For more information, please refer to the",
+        geniusLink: "Genius Privacy Terms",
+        sec4Title: "4. Server Log Files",
+        sec4Text: "The website provider automatically collects and stores information in so-called server log files, which your browser automatically transmits to us (e.g., IP address, browser type, time of the request). This data serves exclusively to ensure technical security and functionality of the website.",
+        sec5Title: "5. Your Rights",
+        sec5Text: "You have the right at any time to obtain free information about your stored personal data, its origin and recipients, and the purpose of the data processing, as well as a right to rectification or deletion of this data.",
+        backLink: "← Back to Main Page",
+        btnText: "EN / DE"
+      },
+      de: {
+        title: "Datenschutzerklärung",
+        sec1Title: "1. Datenschutz auf einen Blick",
+        sec1Text: "Der Schutz Ihrer persönlichen Daten ist uns wichtig. Diese Datenschutzerklärung informiert Sie darüber, welche Daten beim Besuch dieser Website verarbeitet werden.",
+        sec2Title: "2. Verantwortliche Stelle",
+        sec2Text: "Die verantwortliche Stelle für die Datenverarbeitung auf dieser Website ist:",
+        sec3Title: "3. Datenerfassung und API-Nutzung",
+        spotifyText: "Diese Anwendung nutzt Schnittstellen der Spotify Web API, um Musik- und Titelinformationen bereitzustellen. Bei der Nutzung entsprechender Funktionen können technische Anfragen an Server von Spotify übermittelt werden. Es werden keine personenbezogenen Daten an Spotify weitergegeben, es sei denn, Sie melden sich explizit mit Ihrem Spotify-Konto an.",
+        spotifyLinkText: "Weitere Informationen finden Sie in der",
+        spotifyLink: "Spotify-Datenschutzerklärung",
+        geniusText: "Diese Anwendung nutzt Daten der Genius API zur Anzeige von Songtexten. Beim Abrufen von Songtexten werden Suchanfragen an Server von Genius weitergeleitet.",
+        geniusLinkText: "Weitere Informationen finden Sie in den",
+        geniusLink: "Genius-Datenschutzbestimmungen",
+        sec4Title: "4. Server-Log-Dateien",
+        sec4Text: "Der Provider der Seiten erhebt und speichert automatisch Informationen in sogenannten Server-Log-Dateien, die Ihr Browser automatisch an uns übermittelt (z. B. IP-Adresse, Browsertyp, Uhrzeit der Anfrage). Diese Daten dienen ausschließlich der Gewährleistung der technischen Sicherheit und Funktionalität der Website.",
+        sec5Title: "5. Ihre Rechte",
+        sec5Text: "Sie haben jederzeit das Recht, unentgeltlich Auskunft über Herkunft, Empfänger und Zweck Ihrer gespeicherten personenbezogenen Daten zu erhalten. Sie haben außerdem ein Recht, die Berichtigung oder Löschung dieser Daten zu verlangen.",
+        backLink: "← Zurück zur Hauptseite",
+        btnText: "DE / EN"
+      }
+    };
+
+    let currentLang = 'en';
+
+    function toggleLanguage() {
+      currentLang = currentLang === 'en' ? 'de' : 'en';
+      const t = translations[currentLang];
+
+      document.documentElement.lang = currentLang;
+      document.getElementById('title').textContent = t.title;
+      document.getElementById('sec1-title').textContent = t.sec1Title;
+      document.getElementById('sec1-text').textContent = t.sec1Text;
+      document.getElementById('sec2-title').textContent = t.sec2Title;
+      document.getElementById('sec2-text').textContent = t.sec2Text;
+      document.getElementById('sec3-title').textContent = t.sec3Title;
+      document.getElementById('spotify-text').textContent = t.spotifyText;
+      document.getElementById('spotify-link-text').textContent = t.spotifyLinkText;
+      document.getElementById('spotify-link').textContent = t.spotifyLink;
+      document.getElementById('genius-text').textContent = t.geniusText;
+      document.getElementById('genius-link-text').textContent = t.geniusLinkText;
+      document.getElementById('genius-link').textContent = t.geniusLink;
+      document.getElementById('sec4-title').textContent = t.sec4Title;
+      document.getElementById('sec4-text').textContent = t.sec4Text;
+      document.getElementById('sec5-title').textContent = t.sec5Title;
+      document.getElementById('sec5-text').textContent = t.sec5Text;
+      
+      document.getElementById('back-link').textContent = t.backLink;
+      document.getElementById('langToogleBtn').textContent = t.btnText;
+    }
+  </script>
 
 </body>
 </html>
