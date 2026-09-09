@@ -51,7 +51,7 @@ def get_spotify_token():
 def get_spotify_details(title, artist):
     token = get_spotify_token()
     if not token:
-        return None, None, None
+        return None, None, None, None
     
     headers = {'Authorization': f'Bearer {token}'}
     clean_title = title.split('(')[0].split('-')[0].strip()
@@ -67,11 +67,16 @@ def get_spotify_details(title, artist):
             cover = track['album']['images'][0]['url'] if track['album']['images'] else None
             preview = track.get('preview_url')
             spotify_url = track['external_urls'].get('spotify')
-            return cover, preview, spotify_url
+            
+            # Release-Jahr extrahieren
+            raw_date = track.get('album', {}).get('release_date', '')
+            release_date = raw_date[:4] if raw_date else "N/A"
+            
+            return cover, preview, spotify_url, release_date
     except Exception as e:
         print(f"Spotify Search Error: {e}")
         
-    return None, None, None
+    return None, None, None, None
 
 @app.route('/')
 def index():
@@ -131,8 +136,8 @@ def search():
             if detected_lang != selected_language:
                 language_mismatch = True
 
-        # Spotify-Details abfragen
-        spotify_cover, preview, spotify_url = get_spotify_details(title, artist)
+        # Spotify-Details abfragen (inklusive release_date)
+        spotify_cover, preview, spotify_url, release_date = get_spotify_details(title, artist)
         
         final_cover = spotify_cover if spotify_cover else genius_cover
         final_spotify_url = spotify_url if spotify_url else genius_song_url
@@ -142,6 +147,7 @@ def search():
             'artist': artist,
             'cover': final_cover,
             'preview': preview,
+            'release_date': release_date if release_date else "N/A",
             'spotify_url': final_spotify_url,
             'genius_url': genius_song_url,
             'detected_language': detected_lang,
