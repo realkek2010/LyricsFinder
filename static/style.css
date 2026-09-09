@@ -7,7 +7,7 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #535151;
+    background-color: #2c2c2c;
     color: #ffffff;
     text-align: center;
     padding: 20px;
@@ -54,6 +54,39 @@ body {
     color: #ffffff;
     transform: scale(1.1);
     box-shadow: 0 0 15px rgba(88, 101, 242, 0.7);
+}
+
+/* --- Language Toogle (Fixed Top-Right) --- */
+.lang-switch {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+#langToogleBtn {
+    background-color: #242424;
+    color: #1db954;
+    border: 1px solid #1db954;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* Mobile Anpassung */
+@media (max-width: 768px) {
+    .lang-switch {
+        top: 15px;
+        right: 15px;
+    }
+}
+
+#langToogleBtn:hover {
+    background-color: #1db954;
+    color: #ffffff;
 }
 
 /* --- Header & Logo Area --- */
@@ -319,7 +352,7 @@ footer a:hover {
 @media (max-width: 768px) {
     body {
         padding: 15px 10px;
-        background-color: #535151 !important; /* Behält exakt die Desktop-Farbe bei */
+        background-color: #2c2c2c !important; /* Behält exakt die Desktop-Farbe bei */
     }
 
     .discord-link {
