@@ -8,11 +8,10 @@
 </head>
 <body>
 
-    <!-- Sprachumschaltung-->
+    <!-- Sprachumschaltung -->
     <div class="lang-switch">
         <button id="langToogleBtn" onclick="toogleLanguage()">DE / EN</button>
     </div>
-
 
     <!-- Discord Button Oben Links -->
     <a href="https://discord.gg/bhyqq4D9Ab" target="_blank" rel="noopener" class="discord-link" title="Discord (Soon)">
@@ -21,41 +20,40 @@
         </svg>
     </a>
 
-    
-      <main class="main-content">
+    <main class="main-content">
         <!-- Header-Bereich mit Logo und Name -->
         <header class="header-container">
             <img src="/static/logo2.png" alt="LyricsFinder Logo">
             <h1>LyricsFinder</h1>
         </header>
 
-        <p class="P1">Just type the text in your head into the searchbar and click "Search"</p>
-        <p class="P1">It can take a few seconds to do research</p>
+        <p class="P1">Gib einfach den Text aus deinem Kopf in die Suchleiste ein und klicke auf "Suchen"</p>
+        <p class="P1">Die Recherche kann einige Sekunden dauern</p>
 
         <!-- Suchbereich -->
         <div class="search-box">
             <form id="searchForm">
-                <!-- LINKS: Sprachfilter mit erweiterten Sprachen -->
+                <!-- LINKS: Sprachfilter -->
                 <div class="Filter-Sprache">
                     <select id="language" name="language">
-                        <option value="all">All Languages</option>
-                        <option value="en">English</option>
-                        <option value="de">German</option>
-                        <option value="fr">French</option>
-                        <option value="es">Spanish</option>
-                        <option value="it">Italian</option>
-                        <option value="pt">Portuguese</option>
-                        <option value="nl">Dutch</option>
-                        <option value="tr">Turkish</option>
-                        <option value="ru">Russian</option>
+                        <option value="all">Alle Sprachen</option>
+                        <option value="en">Englisch</option>
+                        <option value="de">Deutsch</option>
+                        <option value="fr">Französisch</option>
+                        <option value="es">Spanisch</option>
+                        <option value="it">Italienisch</option>
+                        <option value="pt">Portugiesisch</option>
+                        <option value="nl">Niederländisch</option>
+                        <option value="tr">Türkisch</option>
+                        <option value="ru">Russisch</option>
                     </select>
                 </div>
 
                 <!-- MITTE: Textfeld -->
-                <input type="text" id="query" placeholder="Type your line" aria-label="Search lyrics" required>
+                <input type="text" id="query" placeholder="Textzeile eingeben" aria-label="Search lyrics" required>
 
                 <!-- RECHTS: Suchen Button -->
-                <button type="submit">Search</button>
+                <button type="submit">Suchen</button>
             </form>
         </div>
 
@@ -72,85 +70,10 @@
         </div>
         
         <div class="footer-right">
-            <a href="/datenschutz">Privacy Policy</a>
-            <a href="/impressum">Legal notice</a>
+            <a href="/datenschutz">Datenschutzerklärung</a>
+            <a href="/impressum">Impressum</a>
         </div>
     </footer>
-
-    <script>
-        document.getElementById('searchForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const query = document.getElementById('query').value.trim();
-            const language = document.getElementById('language').value;
-            const container = document.getElementById('results');
-
-            if (!query) return;
-
-            container.innerHTML = `
-                <div class="loading-dots">
-                    Searching<span></span><span></span><span></span>
-                </div>
-            `;
-
-            const formData = new FormData();
-            formData.append('query', query);
-            formData.append('language', language);
-
-            try {
-                const response = await fetch('/search', { 
-                    method: 'POST', 
-                    body: formData 
-                });
-
-                if (!response.ok) {
-                    throw new Error('Serverfehler');
-                }
-
-                const data = await response.json();
-                container.innerHTML = '';
-
-                if (!data.results || data.results.length === 0) {
-                    container.innerHTML = '<p style="color: #b3b3b3;">Keine Ergebnisse gefunden.</p>';
-                    return;
-                }
-
-                // Prüfen, ob bei den Treffern ein Sprach-Mismatch vorliegt
-                const hasMismatch = data.results.some(item => item.language_mismatch);
-
-                if (hasMismatch) {
-                    container.innerHTML = `
-                        <p style="color: #ffcc00; font-weight: bold; background: rgba(255, 204, 0, 0.1); padding: 15px; border-radius: 8px; border: 1px solid #ffcc00;">
-                            Search could not be completed because the languages do not match. Please set the language filter to All Languages.
-                        </p>
-                    `;
-                    return;
-                }
-
-                data.results.forEach(item => {
-                    const card = document.createElement('div');
-                    card.className = 'card';
-                    card.innerHTML = `
-                        <a href="${item.spotify_url}" target="_blank" rel="noopener">
-                            <img src="${item.cover}" alt="${item.title}">
-                        </a>
-                        <h3>${item.title}</h3>
-                        <p>${item.artist}</p>
-                        ${item.preview ? `<audio controls src="${item.preview}" style="width: 100%; margin: 10px 0;"></audio>` : ''}
-                        
-                        <a href="${item.spotify_url}" target="_blank" rel="noopener" style="color: #1db954; font-weight: bold; margin-bottom: 8px; display: inline-block;">
-                            Open with Spotify
-                        </a>
-                        <br>
-                        <a href="${item.genius_url}" target="_blank" rel="noopener" style="color: #b3b3b3; font-size: 13px;">Show Lyrics on Genius</a>
-                    `;
-                    container.appendChild(card);
-                });
-            } catch (error) {
-                console.error('Fehler bei der Suche:', error);
-                container.innerHTML = '<p style="color: #ff5555;">Error during search. Please try again.</p>';
-            }
-        });
-    </script>
 
     <script>
         // Übersetzungswörterbuch für DE / EN
@@ -253,7 +176,7 @@
                 select.querySelector('option[value="ru"]').textContent = t.optRu;
             }
 
-            // Falls aktuell eine Mismatch-Meldung angezeigt wird, diese ebenfalls übersetzen
+            // Mismatch-Meldung übersetzen
             const mismatchBox = document.getElementById('mismatchAlert');
             if (mismatchBox) {
                 mismatchBox.textContent = t.mismatchError;
@@ -318,7 +241,10 @@
                             <img src="${item.cover}" alt="${item.title}">
                         </a>
                         <h3>${item.title}</h3>
-                        <p>${item.artist}</p>
+                        <p style="margin-bottom: 2px;">${item.artist}</p>
+                        <p style="font-size: 12px; color: #b3b3b3; margin-top: 0; margin-bottom: 10px;">
+                            ${item.release_date}
+                        </p>
                         ${item.preview ? `<audio controls src="${item.preview}" style="width: 100%; margin: 10px 0;"></audio>` : ''}
                         
                         <a href="${item.spotify_url}" target="_blank" rel="noopener" style="color: #1db954; font-weight: bold; margin-bottom: 8px; display: inline-block;">
