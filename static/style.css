@@ -1,18 +1,21 @@
 /* --- CSS Variables & Root --- */
 :root {
-    --bg-main: #2c2c2c;
-    --bg-card: #181818;
-    --bg-dark: #121212;
-    --bg-input: #242424;
+    color-scheme: dark;
+    
+    --bg-main: #2c2c2c;       /* Haupt-Hintergrund */
+    --bg-card: #181818;       /* Cards & Container */
+    --bg-dark: #121212;       /* Footer */
+    --bg-input: #242424;      /* Inputs & Fixed Buttons */
     --accent-green: #1db954;
     --accent-green-hover: #1ed760;
     --text-primary: #ffffff;
     --text-muted: #b3b3b3;
+    --border-color: #333333;
     --transition-fast: 0.2s ease;
     --transition-smooth: 0.3s ease-in-out;
 }
 
-/* --- Global Reset & Layout --- */
+/* --- Global Reset & Base --- */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -21,8 +24,8 @@
 
 body {
     font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
-    background-color: var(--bg-main);
-    color: var(--text-primary);
+    background-color: var(--bg-main) !important;
+    color: var(--text-primary) !important;
     text-align: center;
     padding: 20px;
     min-height: 100vh;
@@ -41,34 +44,52 @@ body {
     padding-bottom: 40px;
 }
 
-/* --- Fixed Top Controls (Discord & Language) --- */
-.discord-link {
+/* --- Fixed Top Controls (Discord, Download & Language) --- */
+.discord-link,
+.download-link {
     position: fixed;
-    top: 20px;
-    left: 20px;
-    background-color: var(--bg-input);
-    color: #5865F2;
+    top: 19px;
     width: 45px;
     height: 45px;
-    border-radius: 50%;
+    border-radius: 55%;
     display: flex;
     align-items: center;
     justify-content: center;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
     transition: transform var(--transition-fast), background-color var(--transition-fast), box-shadow var(--transition-fast), color var(--transition-fast);
     z-index: 1000;
+    background-color: var(--bg-input) !important;
+    will-change: transform;
 }
 
-.discord-icon {
+.discord-link {
+    left: 20px;
+    color: #5865F2 !important;
+}
+
+.download-link {
+    left: 75px;
+    color: var(--accent-green) !important;
+}
+
+.discord-icon,
+.download-icon {
     width: 24px;
     height: 24px;
 }
 
 .discord-link:hover {
-    background-color: #5865F2;
-    color: var(--text-primary);
+    background-color: #5865F2 !important;
+    color: var(--text-primary) !important;
     transform: scale(1.1);
     box-shadow: 0 0 15px rgba(88, 101, 242, 0.7);
+}
+
+.download-link:hover {
+    background-color: var(--accent-green) !important;
+    color: var(--text-primary) !important;
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(29, 185, 84, 0.7);
 }
 
 .lang-switch {
@@ -79,8 +100,8 @@ body {
 }
 
 #langToogleBtn {
-    background-color: var(--bg-input);
-    color: var(--accent-green);
+    background-color: var(--bg-input) !important;
+    color: var(--accent-green) !important;
     border: 1px solid var(--accent-green);
     padding: 8px 16px;
     border-radius: 20px;
@@ -91,8 +112,8 @@ body {
 }
 
 #langToogleBtn:hover {
-    background-color: var(--accent-green);
-    color: var(--text-primary);
+    background-color: var(--accent-green) !important;
+    color: var(--text-primary) !important;
 }
 
 /* --- Header & Typography --- */
@@ -114,11 +135,12 @@ body {
 h1 {
     margin: 0;
     font-size: 32px;
+    color: var(--text-primary) !important;
 }
 
 .P1 {
     margin-bottom: 10px;
-    color: #f8f8f8;
+    color: #f8f8f8 !important;
 }
 
 /* --- Search & Filter Form --- */
@@ -148,8 +170,10 @@ h1 {
     padding: 14px 16px;
     border-radius: 25px;
     border: none;
-    background-color: var(--accent-green);
-    color: var(--text-primary);
+    background-color: var(--accent-green) !important;
+    background-image: none;
+    color: var(--text-primary) !important;
+    -webkit-text-fill-color: var(--text-primary) !important;
     font-weight: bold;
     font-size: 16px;
     cursor: pointer;
@@ -159,17 +183,18 @@ h1 {
     -moz-appearance: none;
     text-align: center;
     transition: background-color var(--transition-smooth), transform var(--transition-smooth), box-shadow var(--transition-smooth);
+    will-change: transform;
 }
 
 .Filter-Sprache select:hover {
-    background-color: var(--accent-green-hover);
+    background-color: var(--accent-green-hover) !important;
     transform: translateY(-2px);
     box-shadow: 0 0 15px rgba(29, 185, 84, 0.8), 0 0 25px rgba(29, 185, 84, 0.4);
 }
 
 .Filter-Sprache select option {
-    background-color: var(--bg-input);
-    color: var(--text-primary);
+    background-color: var(--bg-input) !important;
+    color: var(--text-primary) !important;
     font-size: 15px;
     padding: 8px;
     font-weight: normal;
@@ -180,12 +205,20 @@ input[type="text"] {
     width: 100%;
     max-width: 320px;
     border-radius: 25px;
-    border: 1px solid #333333;
-    background-color: var(--bg-input);
-    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-input) !important;
+    color: var(--text-primary) !important;
+    -webkit-text-fill-color: var(--text-primary) !important;
     font-size: 16px;
     outline: none;
+    appearance: none;
+    -webkit-appearance: none;
     transition: border-color var(--transition-fast);
+}
+
+input[type="text"]::placeholder {
+    color: var(--text-muted) !important;
+    opacity: 1;
 }
 
 input[type="text"]:focus {
@@ -196,17 +229,22 @@ button[type="submit"] {
     padding: 14px 28px;
     border-radius: 25px;
     border: none;
-    background-color: var(--accent-green);
-    color: var(--text-primary);
+    background-color: var(--accent-green) !important;
+    background-image: none;
+    color: var(--text-primary) !important;
+    -webkit-text-fill-color: var(--text-primary) !important;
     font-weight: bold;
     font-size: 16px;
     cursor: pointer;
     white-space: nowrap;
+    appearance: none;
+    -webkit-appearance: none;
     transition: background-color var(--transition-smooth), transform var(--transition-smooth), box-shadow var(--transition-smooth);
+    will-change: transform;
 }
 
 button[type="submit"]:hover {
-    background-color: var(--accent-green-hover);
+    background-color: var(--accent-green-hover) !important;
     transform: translateY(-2px);
     box-shadow: 0 0 15px rgba(29, 185, 84, 0.8), 0 0 25px rgba(29, 185, 84, 0.4);
 }
@@ -222,7 +260,7 @@ button[type="submit"]:hover {
 
 .card {
     position: relative;
-    background-color: var(--bg-card);
+    background-color: var(--bg-card) !important;
     padding: 20px;
     border-radius: 12px;
     width: 260px;
@@ -231,6 +269,7 @@ button[type="submit"]:hover {
     align-items: center;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
     transition: transform var(--transition-smooth), box-shadow var(--transition-smooth);
+    will-change: transform;
 }
 
 .card:hover {
@@ -247,6 +286,7 @@ button[type="submit"]:hover {
     cursor: pointer;
     display: block;
     transition: box-shadow var(--transition-smooth), transform var(--transition-smooth);
+    will-change: transform;
 }
 
 .card img:hover {
@@ -257,10 +297,11 @@ button[type="submit"]:hover {
 .card h3 {
     margin: 10px 0 5px 0;
     font-size: 18px;
+    color: var(--text-primary) !important;
 }
 
 .card p {
-    color: var(--text-muted);
+    color: var(--text-muted) !important;
     margin: 0 0 15px 0;
     font-size: 14px;
 }
@@ -285,9 +326,9 @@ button[type="submit"]:hover {
     height: 38px;
     padding: 0;
     border-radius: 50%;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.7) !important;
     border: none;
-    color: var(--text-primary);
+    color: var(--text-primary) !important;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -296,10 +337,11 @@ button[type="submit"]:hover {
     z-index: 10;
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
+    will-change: transform;
 }
 
 .share-btn:hover {
-    background: rgba(0, 0, 0, 0.95);
+    background: rgba(0, 0, 0, 0.95) !important;
     transform: scale(1.1);
 }
 
@@ -311,8 +353,8 @@ button[type="submit"]:hover {
 }
 
 .share-btn.copied {
-    background-color: var(--accent-green);
-    color: var(--text-primary);
+    background-color: var(--accent-green) !important;
+    color: var(--text-primary) !important;
 }
 
 .toast-message {
@@ -320,8 +362,8 @@ button[type="submit"]:hover {
     bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
-    background-color: var(--accent-green);
-    color: var(--text-primary);
+    background-color: var(--accent-green) !important;
+    color: var(--text-primary) !important;
     padding: 10px 20px;
     border-radius: 20px;
     font-size: 14px;
@@ -336,8 +378,8 @@ footer {
     justify-content: space-between;
     align-items: center;
     padding: 20px 30px;
-    background-color: var(--bg-dark);
-    color: var(--text-muted);
+    background-color: var(--bg-dark) !important;
+    color: var(--text-muted) !important;
     font-size: 14px;
     border-top: 1px solid var(--bg-input);
     margin-top: auto;
@@ -368,7 +410,7 @@ footer a:hover {
 
 /* --- Skeleton Loader --- */
 .skeleton-card {
-    background-color: var(--bg-card, #181818);
+    background-color: var(--bg-card) !important;
     padding: 20px;
     border-radius: 12px;
     width: 260px;
@@ -404,7 +446,6 @@ footer a:hover {
     margin-bottom: 20px;
 }
 
-/* Korrigiert: skeleton-button (mit einem 't') */
 .skeleton-button {
     width: 120px;
     height: 26px;
@@ -420,7 +461,6 @@ footer a:hover {
     }
 }
 
-
 /* --- Mobile Responsive Rules --- */
 @media (max-width: 768px) {
     body {
@@ -430,6 +470,13 @@ footer a:hover {
     .discord-link {
         top: 15px;
         left: 15px;
+        width: 40px;
+        height: 40px;
+    }
+
+    .download-link {
+        top: 15px;
+        left: 62px;
         width: 40px;
         height: 40px;
     }
@@ -448,11 +495,7 @@ footer a:hover {
         width: 100%;
     }
 
-    .Filter-Sprache select {
-        width: 100%;
-        -webkit-text-fill-color: var(--text-primary);
-    }
-
+    .Filter-Sprache select,
     input[type="text"],
     button[type="submit"] {
         width: 100%;
@@ -475,4 +518,3 @@ footer a:hover {
         gap: 8px;
     }
 }
-
