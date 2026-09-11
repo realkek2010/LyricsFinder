@@ -10,7 +10,6 @@
             position: relative; 
         }
 
-        /* Exakt kreisrunder Share-Button oben links auf dem Album-Cover */
         .share-btn {
             position: absolute;
             top: 30px;
@@ -65,6 +64,51 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
             z-index: 1000;
         }
+
+        /* --- Standard-Animation beim Seitenstart --- */
+        .animated-title span {
+            display: inline-block;
+            animation: bounceLetter 0.6s ease-in-out forwards;
+            transition: color 0.3s ease, text-shadow 0.3s ease;
+        }
+
+        /* --- Endlosschleife beim Suchen / Laden --- */
+        .animated-title.loading span {
+            animation: bounceLetter 0.8s ease-in-out infinite;
+        }
+
+        @keyframes bounceLetter {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-12px);
+            }
+            70% {
+                transform: translateY(3px);
+            }
+        }
+
+        /* --- Spotify-Grüner Glanzeffekt bei Treffern --- */
+        .animated-title.success span {
+            animation: none; /* Wellen-Animation stoppen */
+            background: linear-gradient(110deg, #1db954 30%, #ffffff 50%, #1db954 70%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+            animation: shineEffect 2s linear infinite;
+            filter: drop-shadow(0 0 8px rgba(29, 185, 84, 0.6));
+        }
+
+        @keyframes shineEffect {
+            0% {
+                background-position: 200% center;
+            }
+            100% {
+                background-position: -200% center;
+            }
+        }
     </style>
 </head>
 <body>
@@ -85,7 +129,9 @@
         <!-- Header-Bereich mit Logo und Name -->
         <header class="header-container">
             <img src="/static/logo2.png" alt="LyricsFinder Logo">
-            <h1>LyricsFinder</h1>
+            <h1 class="animated-title" id="titleHeader">
+                <span style="animation-delay: 0.05s;">L</span><span style="animation-delay: 0.1s;">y</span><span style="animation-delay: 0.15s;">r</span><span style="animation-delay: 0.2s;">i</span><span style="animation-delay: 0.25s;">c</span><span style="animation-delay: 0.3s;">s</span><span style="animation-delay: 0.35s;">F</span><span style="animation-delay: 0.4s;">i</span><span style="animation-delay: 0.45s;">n</span><span style="animation-delay: 0.5s;">d</span><span style="animation-delay: 0.55s;">e</span><span style="animation-delay: 0.6s;">r</span>
+            </h1>
         </header>
 
         <p class="P1">Gib einfach den Text aus deinem Kopf in die Suchleiste ein und klicke auf "Suchen"</p>
@@ -137,7 +183,6 @@
     </footer>
 
     <script>
-        // Übersetzungswörterbuch für DE / EN
         const translations = {
             de: {
                 p1: "Gib einfach den Text aus deinem Kopf in die Suchleiste ein und klicke auf \"Suchen\"",
@@ -193,38 +238,30 @@
             }
         };
 
-        // Standardmäßig auf DE
         let currentLang = 'de';
 
         function toogleLanguage() {
             currentLang = currentLang === 'de' ? 'en' : 'de';
             const t = translations[currentLang];
 
-            // HTML-Lang-Attribut aktualisieren
             document.documentElement.lang = currentLang;
 
-            // Untertitel aktualisieren
             const pElements = document.querySelectorAll('.P1');
             if (pElements.length >= 2) {
                 pElements[0].textContent = t.p1;
                 pElements[1].textContent = t.p2;
             }
 
-            // Input Placeholder & Search Button
             document.getElementById('query').placeholder = t.placeholder;
             document.querySelector('#searchForm button').textContent = t.searchBtn;
-
-            // Toggle Button Text
             document.getElementById('langToogleBtn').textContent = t.btnText;
 
-            // Footer Links übersetzen
             const footerLinks = document.querySelectorAll('.footer-right a');
             if (footerLinks.length >= 2) {
                 footerLinks[0].textContent = t.privacyPolicy;
                 footerLinks[1].textContent = t.legalNotice;
             }
 
-            // Dropdown-Optionen übersetzen
             const select = document.getElementById('language');
             if (select) {
                 select.querySelector('option[value="all"]').textContent = t.optAll;
@@ -239,7 +276,6 @@
                 select.querySelector('option[value="ru"]').textContent = t.optRu;
             }
 
-            // Mismatch-Meldung übersetzen
             const mismatchBox = document.getElementById('mismatchAlert');
             if (mismatchBox) {
                 mismatchBox.textContent = t.mismatchError;
@@ -271,15 +307,24 @@
             const query = document.getElementById('query').value.trim();
             const language = document.getElementById('language').value;
             const container = document.getElementById('results');
+            const titleHeader = document.getElementById('titleHeader');
             const t = translations[currentLang];
 
             if (!query) return;
 
-            container.innerHTML = `
-                <div class="loading-dots">
-                    ${t.searching}<span></span><span></span><span></span>
+            // Vorherigen Erfolgs-Effekt entfernen & Lade-Animation aktivieren
+            titleHeader.classList.remove('success');
+            titleHeader.classList.add('loading');
+
+            // Skeleton-Platzhalter
+            container.innerHTML = Array(6).fill(`
+                <div class="skeleton-card">
+                    <div class="skeleton-box skeleton-img"></div>
+                    <div class="skeleton-box skeleton-title"></div>
+                    <div class="skeleton-box skeleton-text"></div>
+                    <div class="skeleton-box skeleton-button"></div>
                 </div>
-            `;
+            `).join('');
 
             const formData = new FormData();
             formData.append('query', query);
@@ -303,7 +348,6 @@
                     return;
                 }
 
-                // Prüfen auf Sprach-Mismatch
                 const hasMismatch = data.results.some(item => item.language_mismatch);
 
                 if (hasMismatch) {
@@ -314,6 +358,9 @@
                     `;
                     return;
                 }
+
+                // ERFOLG: Spotify-Grün & Shimmer aktivieren
+                titleHeader.classList.add('success');
 
                 data.results.sort((a, b) => (b.popularity || 0) - (a.popularity || 0));
 
@@ -345,6 +392,9 @@
             } catch (error) {
                 console.error('Fehler bei der Suche:', error);
                 container.innerHTML = `<p style="color: #ff5555;">${t.serverError}</p>`;
+            } finally {
+                // Ladeanimation deaktivieren
+                titleHeader.classList.remove('loading');
             }
         });
     </script>
