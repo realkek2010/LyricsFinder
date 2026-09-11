@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_from_directory
 import requests
 import re
+import os
 from langdetect import detect, LangDetectException
 
 app = Flask(__name__)
@@ -81,6 +82,16 @@ def get_spotify_details(title, artist):
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/download')
+def download_page():
+    return render_template('download.html')
+
+@app.route('/download/apk')
+def download_apk():
+    # Sendet die APK-Datei aus dem static-Ordner
+    static_folder = os.path.join(app.root_path, 'static')
+    return send_from_directory(static_folder, 'LyricsFinder.apk', as_attachment=True)
 
 @app.route('/search', methods=['POST'])
 def search():
