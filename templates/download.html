@@ -23,6 +23,36 @@
             padding: 40px 20px;
         }
 
+        /* Header Styling (Logo & Titel nebeneinander) */
+        .site-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .header-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .site-header .logo {
+            height: 40px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .site-header .site-title {
+            font-size: 32px;
+            font-weight: bold;
+            margin: 0;
+            color: var(--text-primary, #ffffff);
+        }
+
         .download-card {
             background-color: var(--bg-card, #181818);
             border: 1px solid var(--border-color, #333333);
@@ -32,7 +62,6 @@
             width: 100%;
             text-align: center;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-            margin-top: 20px;
         }
 
         .download-card h2 {
@@ -90,10 +119,12 @@
     <!-- Hauptbereich -->
     <main class="download-wrapper">
 
-        <!-- Logo & Titel oben in der Mitte -->
+        <!-- Logo & Titel nebeneinander mit Verlinkung zur Startseite -->
         <header class="site-header">
-            <img src="/static/logo.png" alt="LyricsFinder Logo" class="logo">
-            <h1 class="site-title">LyricsFinder</h1>
+            <a href="/" class="header-link">
+                <img src="/static/logo2.png" alt="LyricsFinder Logo" class="logo">
+                <h1 class="site-title">LyricsFinder</h1>
+            </a>
         </header>
 
         <!-- Download Box -->
@@ -102,7 +133,7 @@
             <p id="downloadDesc">Lade dir die neueste Version direkt herunter.</p>
             
             <!-- DOWNLOAD BUTTON -->
-            <a href="meine-datei.apk" download id="downloadBtnText" class="download-btn">
+            <a href="/download/apk" download id="downloadBtnText" class="download-btn">
                 Herunterladen für Android
             </a>
         </div>
