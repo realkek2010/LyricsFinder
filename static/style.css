@@ -366,44 +366,60 @@ footer a:hover {
     text-decoration: underline;
 }
 
-/* --- Loading Animation --- */
-.loading-dots {
+/* --- Skeleton Loader --- */
+.skeleton-card {
+    background-color: var(--bg-card, #181818);
+    padding: 20px;
+    border-radius: 12px;
+    width: 260px;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    gap: 6px;
-    margin-top: 20px;
-    font-size: 16px;
-    color: var(--text-muted);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
 }
 
-.loading-dots span {
-    width: 8px;
-    height: 8px;
-    background-color: var(--accent-green);
-    border-radius: 50%;
-    display: inline-block;
-    animation: bounce 1.4s infinite ease-in-out both;
+.skeleton-box {
+    background: linear-gradient(90deg, #242424 25%, #333333 50%, #242424 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite ease-in-out;
+    border-radius: 6px;
 }
 
-.loading-dots span:nth-child(1) {
-    animation-delay: -0.32s;
+.skeleton-img {
+    width: 180px;
+    height: 180px;
+    border-radius: 8px;
+    margin-bottom: 15px;
 }
 
-.loading-dots span:nth-child(2) {
-    animation-delay: -0.16s;
+.skeleton-title {
+    width: 140px;
+    height: 14px;
+    margin-bottom: 12px;
 }
 
-@keyframes bounce {
-    0%, 80%, 100% {
-        transform: scale(0);
-        opacity: 0.3;
+.skeleton-text {
+    width: 100px;
+    height: 14px;
+    margin-bottom: 20px;
+}
+
+/* Korrigiert: skeleton-button (mit einem 't') */
+.skeleton-button {
+    width: 120px;
+    height: 26px;
+    margin-top: auto;
+}
+
+@keyframes skeleton-loading {
+    0% {
+        background-position: 200% 0;
     }
-    40% {
-        transform: scale(1);
-        opacity: 1;
+    100% {
+        background-position: -200% 0;
     }
 }
+
 
 /* --- Mobile Responsive Rules --- */
 @media (max-width: 768px) {
@@ -459,3 +475,4 @@ footer a:hover {
         gap: 8px;
     }
 }
+
