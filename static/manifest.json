@@ -1,0 +1,16 @@
+{
+  "background_color": "#181818",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "LyricsFinder",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "LyricsFinder",
+  "start_url": "https://lyricsfinder-pwhd.onrender.com/",
+  "theme_color": "#2c2c2c",
+  "lang": "de",
+  "categories": [
+    "entertainment",
+    "music"
+  ]
+}
