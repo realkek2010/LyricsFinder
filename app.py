@@ -97,7 +97,7 @@ def download_apk():
 def download_exe():
     # Sendet die Windows .exe-Datei aus dem static-Ordner
     static_folder = os.path.join(app.root_path, 'static')
-    return send_from_directory(static_folder, 'LyricsFinder.exe', as_attachment=True)
+    return send_from_directory(static_folder, 'LyricsFinder.msixbundle', as_attachment=True)
 
 @app.route('/search', methods=['POST'])
 def search():
