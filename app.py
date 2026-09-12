@@ -84,13 +84,22 @@ def download_page():
 @app.route('/download/apk')
 def download_apk():
     static_folder = os.path.join(app.root_path, 'static')
-    return send_from_directory(static_folder, 'LyricsFinder.apk', as_attachment=True)
+    file_path = os.path.join(static_folder, 'LyricsFinder.apk')
+    if not os.path.exists(file_path):
+        return "Datei LyricsFinder.apk nicht im static-Ordner gefunden!", 404
+    return send_from_directory(static_folder, 'LyricsFinder.apk', as_attachment=True, download_name='LyricsFinder.apk')
 
 @app.route('/download/exe')
 def download_exe():
     static_folder = os.path.join(app.root_path, 'static')
-    # Greift direkt auf den exakten Dateinamen 'LyricsFinder.zip' zu
-    return send_from_directory(static_folder, 'LyricsFinder.zip', as_attachment=True)
+    file_path = os.path.join(static_folder, 'LyricsFinder.zip')
+    
+    # Exakte Prüfung, ob die ZIP im static-Ordner liegt
+    if not os.path.exists(file_path):
+        return "Fehler: Die Datei LyricsFinder.zip wurde im static-Ordner nicht gefunden!", 404
+        
+    # Sendet explizit die ZIP mit dem richtigen Header
+    return send_from_directory(static_folder, 'LyricsFinder.zip', as_attachment=True, download_name='LyricsFinder.zip')
 
 @app.route('/search', methods=['POST'])
 def search():
