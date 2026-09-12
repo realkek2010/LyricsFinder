@@ -15,6 +15,12 @@
     --transition-smooth: 0.3s ease-in-out;
 }
 
+/* Erzwungene Theme-Farbe gegen Smartphone-Hellmodus Overrides */
+html {
+    background-color: var(--bg-main) !important;
+    color-scheme: dark !important;
+}
+
 /* --- Global Reset & Base --- */
 * {
     box-sizing: border-box;
@@ -44,14 +50,14 @@ body {
     padding-bottom: 40px;
 }
 
-/* --- Fixed Top Controls (Discord, Download & Language) --- */
-.discord-link,
-.download-link {
+/* --- Discord Button (separat) --- */
+.discord-link {
     position: fixed;
     top: 19px;
+    left: 20px;
     width: 45px;
     height: 45px;
-    border-radius: 55%;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -59,21 +65,11 @@ body {
     transition: transform var(--transition-fast), background-color var(--transition-fast), box-shadow var(--transition-fast), color var(--transition-fast);
     z-index: 1000;
     background-color: var(--bg-input) !important;
+    color: #5865F2 !important;
     will-change: transform;
 }
 
-.discord-link {
-    left: 20px;
-    color: #5865F2 !important;
-}
-
-.download-link {
-    left: 75px;
-    color: var(--accent-green) !important;
-}
-
-.discord-icon,
-.download-icon {
+.discord-icon {
     width: 24px;
     height: 24px;
 }
@@ -85,6 +81,30 @@ body {
     box-shadow: 0 0 15px rgba(88, 101, 242, 0.7);
 }
 
+/* --- Download Button (separat) --- */
+.download-link {
+    position: fixed;
+    top: 19px;
+    left: 75px;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    transition: transform var(--transition-fast), background-color var(--transition-fast), box-shadow var(--transition-fast), color var(--transition-fast);
+    z-index: 1000;
+    background-color: var(--bg-input) !important;
+    color: var(--accent-green) !important;
+    will-change: transform;
+}
+
+.download-icon {
+    width: 24px;
+    height: 24px;
+}
+
 .download-link:hover {
     background-color: var(--accent-green) !important;
     color: var(--text-primary) !important;
@@ -92,6 +112,7 @@ body {
     box-shadow: 0 0 15px rgba(29, 185, 84, 0.7);
 }
 
+/* --- Language Switch --- */
 .lang-switch {
     position: fixed;
     top: 20px;
@@ -464,28 +485,67 @@ footer a:hover {
 /* --- Mobile Responsive Rules --- */
 @media (max-width: 768px) {
     body {
-        padding: 15px 10px;
+        padding: 10px;
     }
 
+    /* Discord Button oben links */
     .discord-link {
-        top: 15px;
-        left: 15px;
-        width: 40px;
-        height: 40px;
+        top: 10px;
+        left: 10px;
+        width: 36px;
+        height: 36px;
     }
 
+    .discord-icon {
+        width: 18px;
+        height: 18px;
+    }
+
+    /* Download Button direkt unter Discord */
     .download-link {
-        top: 15px;
-        left: 62px;
-        width: 40px;
-        height: 40px;
+        top: 52px;
+        left: 10px;
+        width: 36px;
+        height: 36px;
     }
 
+    .download-icon {
+        width: 18px;
+        height: 18px;
+    }
+
+    /* Language Switch */
     .lang-switch {
-        top: 15px;
-        right: 15px;
+        top: 10px;
+        right: 10px;
     }
 
+    #langToogleBtn {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+
+    /* Header Platz verschieben für die übereinanderliegenden Buttons */
+    .header-container {
+        margin-top: 65px !important;
+        margin-bottom: 15px;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .header-container img {
+        height: 32px !important;
+        width: auto !important;
+    }
+
+    h1 {
+        font-size: 22px !important;
+    }
+
+    /* Formular auf Mobil */
     #searchForm {
         flex-direction: column;
         gap: 12px;
