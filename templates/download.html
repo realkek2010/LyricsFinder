@@ -89,7 +89,9 @@
             cursor: pointer;
             transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
             text-decoration: none;
-            display: inline-block;
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .download-btn:hover {
@@ -100,6 +102,18 @@
 
         .download-btn:active {
             transform: translateY(0);
+        }
+
+        /* Sekundärer Button-Stil für Windows */
+        .download-btn.windows {
+            margin-top: 15px;
+            background-color: #2b2d31;
+            border: 1px solid #404249;
+        }
+
+        .download-btn.windows:hover {
+            background-color: #35373c;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
         }
     </style>
 </head>
@@ -131,11 +145,16 @@
         <!-- Download Box -->
         <div class="download-card">
             <h2 id="downloadTitle">Download</h2>
-            <p id="downloadDesc">Lade dir die neueste Version direkt herunter. (2MB)</p>
+            <p id="downloadDesc">Lade dir die neueste Version direkt herunter.</p>
             
-            <!-- DOWNLOAD BUTTON -->
-            <a href="/download/apk" download id="downloadBtnText" class="download-btn">
+            <!-- DOWNLOAD BUTTON ANDROID -->
+            <a href="/download/apk" download id="downloadBtnAndroid" class="download-btn">
                 Herunterladen für Android
+            </a>
+
+            <!-- DOWNLOAD BUTTON WINDOWS -->
+            <a href="/download/exe" download id="downloadBtnWindows" class="download-btn windows">
+                Herunterladen für Windows
             </a>
         </div>
     </main>
@@ -159,7 +178,8 @@
             de: {
                 title: "Download",
                 desc: "Lade dir die neueste Version direkt herunter.",
-                btnDownload: "Herunterladen für Android",
+                btnAndroid: "Herunterladen für Android",
+                btnWindows: "Herunterladen für Windows",
                 btnText: "DE / EN",
                 privacyPolicy: "Datenschutzerklärung",
                 legalNotice: "Impressum"
@@ -167,7 +187,8 @@
             en: {
                 title: "Download",
                 desc: "Download the latest version directly.",
-                btnDownload: "Download for Android",
+                btnAndroid: "Download for Android",
+                btnWindows: "Download for Windows",
                 btnText: "EN / DE",
                 privacyPolicy: "Privacy Policy",
                 legalNotice: "Legal notice"
@@ -184,7 +205,8 @@
 
             document.getElementById('downloadTitle').textContent = t.title;
             document.getElementById('downloadDesc').textContent = t.desc;
-            document.getElementById('downloadBtnText').textContent = t.btnDownload;
+            document.getElementById('downloadBtnAndroid').textContent = t.btnAndroid;
+            document.getElementById('downloadBtnWindows').textContent = t.btnWindows;
             document.getElementById('langToogleBtn').textContent = t.btnText;
 
             const footerLinks = document.querySelectorAll('.footer-right a');
@@ -195,4 +217,4 @@
         }
     </script>
 </body>
-</html>>
+</html>
