@@ -12,10 +12,6 @@ SPOTIFY_CLIENT_ID = "91c3e6a4cf0e46c394fa9412ef865947"
 SPOTIFY_CLIENT_SECRET = "b2faac29494741a589ea872ae345e49b"
 
 def is_original_track(title):
-    """
-    Prüft, ob der Song ein Original ist.
-    Filtert Remixes, Instrumentals, Live-Versionen, Covers etc. heraus.
-    """
     forbidden_terms = [
         r'\bremix\b', r'\binstrumental\b', r'\bcover\b', r'\blive\b',
         r'\bedit\b', r'\bspeed up\b', r'\bslowed\b', r'\bkaraoke\b',
@@ -28,7 +24,6 @@ def is_original_track(title):
     return True
 
 def detect_language_text(text):
-    """Erkennt die Sprache eines Textes (z. B. de, en, fr, es, it, etc.)."""
     try:
         if len(text.strip()) < 3:
             return "unknown"
@@ -69,7 +64,6 @@ def get_spotify_details(title, artist):
             preview = track.get('preview_url')
             spotify_url = track['external_urls'].get('spotify')
             
-            # Release-Jahr extrahieren
             raw_date = track.get('album', {}).get('release_date', '')
             release_date = raw_date[:4] if raw_date else "N/A"
             
@@ -89,15 +83,14 @@ def download_page():
 
 @app.route('/download/apk')
 def download_apk():
-    # Sendet die APK-Datei aus dem static-Ordner
     static_folder = os.path.join(app.root_path, 'static')
     return send_from_directory(static_folder, 'LyricsFinder.apk', as_attachment=True)
 
 @app.route('/download/exe')
 def download_exe():
-    # Sendet die Windows .exe-Datei aus dem static-Ordner
     static_folder = os.path.join(app.root_path, 'static')
-    return send_from_directory(static_folder, 'LyricsFinder.msixbundle', as_attachment=True)
+    # Greift direkt auf den exakten Dateinamen 'LyricsFinder.zip' zu
+    return send_from_directory(static_folder, 'LyricsFinder.zip', as_attachment=True)
 
 @app.route('/search', methods=['POST'])
 def search():
@@ -132,7 +125,6 @@ def search():
         title = result_item['title']
         artist = result_item['primary_artist']['name']
 
-        # Filter: Nur Original-Tracks verarbeiten (keine Remixes, Instrumentals etc.)
         if not is_original_track(title):
             continue
 
@@ -144,16 +136,13 @@ def search():
         else:
             genius_song_url = raw_genius_url
 
-        # Spracherkennung durchführen
         detected_lang = detect_language_text(f"{lyrics_snippet} {title}")
 
-        # Prüfen, ob eine Sprachabweichung vorliegt
         language_mismatch = False
         if selected_language != 'all':
             if detected_lang != selected_language:
                 language_mismatch = True
 
-        # Spotify-Details abfragen (inklusive release_date)
         spotify_cover, preview, spotify_url, release_date = get_spotify_details(title, artist)
         
         final_cover = spotify_cover if spotify_cover else genius_cover
