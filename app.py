@@ -93,6 +93,12 @@ def download_apk():
     static_folder = os.path.join(app.root_path, 'static')
     return send_from_directory(static_folder, 'LyricsFinder.apk', as_attachment=True)
 
+@app.route('/download/exe')
+def download_exe():
+    # Sendet die Windows .exe-Datei aus dem static-Ordner
+    static_folder = os.path.join(app.root_path, 'static')
+    return send_from_directory(static_folder, 'LyricsFinder.exe', as_attachment=True)
+
 @app.route('/search', methods=['POST'])
 def search():
     lyrics_snippet = request.form.get('query')
